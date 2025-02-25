@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
 
+
     public static GameManager Instance;
 
     public GameObject PlayerMovement;
@@ -40,6 +41,15 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Attic");
         Debug.Log("Attic has loaded");
+    }
+
+    public void HideWaypoints()
+    {
+        GameObject.Find("Waypoint").transform.localScale = new Vector3(0, 0, 0);
+        for (int i = 2; i < 7; i++)
+        {
+            GameObject.Find("Waypoint " + i).transform.localScale = new Vector3(0, 0, 0);
+        }
     }
 
     //Possible death for player when attacked by enemy
