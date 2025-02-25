@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class Enemy : MonoBehaviour
     public LayerMask targetMask; //will look for Player layer :3
     public LayerMask obstructionMask;
 
-    public float detectionRadius = 15.0f;
+    public float detectionRadius = 30.0f;
     public float detectionAngle = 70.0f;
 
     //patrol mode variables
@@ -30,6 +31,9 @@ public class Enemy : MonoBehaviour
     public Transform target;
     private Animator enemyAnimator;
     private int targetPoint;
+
+    public GameObject player;
+
 
 
 
@@ -98,35 +102,34 @@ public class Enemy : MonoBehaviour
 
     private void LookForPlayer()
     {
-        Vector3 enemyPosition = transform.position;
 
-        if (PlayerMovement.instance == null)
+        if (player == null)
         {
             return;
         }
 
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, detectionRadius, targetMask);
+        Vector3 enemyPosition = transform.position;
 
-        if(rangeChecks.Length != 0)
-        {
-            Transform target = rangeChecks[0].transform;
+        Physics.CheckSphere(transform.position, detectionRadius, targetMask);
+
             Vector3 directionToTarget = (target.position - transform.position).normalized;
 
-            if(Vector3.Angle(transform.forward, directionToTarget) < detectionAngle / 2)
+        if(Vector3.Angle(transform.forward, directionToTarget) < detectionAngle / 2)
             {
                 //Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
                 //toPlayer.y = 0;
-                float toPlayer = Vector3.Distance(PlayerMovement.instance.transform.position, enemyPosition);
+                float toPlayer = Vector3.Distance(player.transform.position, enemyPosition);
 
-                if (!Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask)) {
+                if (Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask)) 
+                {
                     playerDetected = true;
-                    preChase -= (int)Time.deltaTime;
+                    Debug.Log("player found");
+                    preChase -= Time.deltaTime;
                 }
                 else
                     playerDetected = false;
             }
-        }
-        else if (playerDetected)
+        else if (!playerDetected)
             playerDetected = false;
         //did not account for obstruction
         /*
