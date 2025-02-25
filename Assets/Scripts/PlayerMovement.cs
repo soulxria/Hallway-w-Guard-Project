@@ -13,6 +13,12 @@ public class PlayerMovement : MonoBehaviour
     public float staminaDrain = 10f; //How much the stamina will drain per second while running
     public float staminaRegen = 5f; //How much stamina regen will be per second
     public float staminaThreshold = 10f; //How much stamina the player needs in order to run again
+    public float mouseSensitivity = 2f; //How senstive the camera mouse movement will be
+    float cameraVerticalRotation = 0f; //Setting up how the variable will handle movement
+
+    bool lockedCursor = true;
+
+    public Transform player;
     public Slider staminaBar;
 
     private float currentStamina;
@@ -28,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -44,8 +53,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovementInput()
     {
+        //Mouse and key inputs
         horizontalInput = Input.GetAxis("Horizontal"); //A/D for left and right respectively
-        verticalInput = Input.GetAxis("Vertical"); //W/S for up and down respectively
+        verticalInput = Input.GetAxis("Vertical"); //W/S for forward and backwards respectively
+        float inputX = Input.GetAxis("Mouse X") * mouseSensitivity; //Looking left and right
+        float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity; //Looking up and down
+
+        //Rotating the camera around the X axis
+        cameraVerticalRotation -= inputY;
+        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
+        transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
+
+        //Rotating the player object and the camera around the Y axis
+        player.Rotate(Vector3.up * inputX);
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
 
@@ -99,4 +119,3 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
-
