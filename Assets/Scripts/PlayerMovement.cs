@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public float staminaThreshold = 10f; //How much stamina the player needs in order to run again
     public float mouseSensitivity = 2f; //How senstive the camera mouse movement will be
     float cameraVerticalRotation = 0f; //Setting up how the variable will handle movement
+    float cameraHorizontalRotation = 0f; //Setting up for the horizontal movement
 
     bool lockedCursor = true;
 
@@ -61,8 +62,11 @@ public class PlayerMovement : MonoBehaviour
 
         //Rotating the camera around the X axis
         cameraVerticalRotation -= inputY;
+        cameraHorizontalRotation -= inputX;
         cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
+        cameraHorizontalRotation = Mathf.Clamp(cameraHorizontalRotation, -90f, 90f);
         transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
+        transform.localEulerAngles = Vector3.right * cameraHorizontalRotation;
 
         //Rotating the player object and the camera around the Y axis
         player.Rotate(Vector3.up * inputX);
