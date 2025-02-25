@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public bool isCredits = false;
     public bool isStartScreen = true;
 
+    //Scene loading
     public void mainMenu()
     {
         SceneManager.LoadScene("StartScreen");
@@ -41,10 +42,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Attic has loaded");
     }
 
+    //Possible death for player when attacked by enemy
     private bool isAlive;
 
     public bool isGameOver = false;
 
+    //Scene loading for when something happens. Will call on it
     public void GameOver()
     {
         if (isGameOver) return;
@@ -60,7 +63,6 @@ public class GameManager : MonoBehaviour
         if (isCredits) return;
         {
             SceneManager.LoadScene("Credits");
-
         }
         //Show credits screen
         Debug.Log("Credits Scene");
@@ -80,29 +82,14 @@ public class GameManager : MonoBehaviour
     {
         if (isVictory) return;
         {
-            SceneManager.LoadScene("Victory");
+            SceneManager.LoadScene("FinalScene");
         }
-        Debug.Log("Victory!");
-        //End of Alyssa updated Game Over 11:26pm 2/4/2025
+        Debug.Log("Final Scene");
 
-        void RestartGame()
+        //Trying to figure out transitions for code. Waiting until more information
+        /*void RestartGame()
         {
-            SceneManager.LoadScene("LevelOne");
-        }
-
-        void EnemyDestroyed()
-        {
-            destroyedEnemies++;
-            CheckLevelTransition();
-        }
-
-        void CheckLevelTransition()
-        {
-            if (destroyedEnemies >= enemiesToDestroy && currentLevel == 1)
-            {
-                currentLevel = 2;
-                LoadLevel2();
-            }
+            SceneManager.LoadScene("Main Menu");
         }
 
         void LoadLevel2()
@@ -110,16 +97,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("Transitioning to Level Two");
 
             SceneManager.LoadScene("LevelTwo");
-            destroyedEnemies = 0;
-            enemiesToDestroy = 1;
-
-            if (destroyedEnemies >= enemiesToDestroy && currentLevel == 2)
-            {
-                isVictory = true;
-            }
         }
-
-        // Update is called once per frame
+        */
+        
+        // Update for key buttons
         void Update()
         {
             if (Input.GetKeyDown("escape"))
