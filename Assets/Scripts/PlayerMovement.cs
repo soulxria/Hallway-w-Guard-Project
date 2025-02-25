@@ -66,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
         cameraHorizontalRotation = Mathf.Clamp(cameraHorizontalRotation, -90f, 90f);
         transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
-        transform.localEulerAngles = Vector3.right * cameraHorizontalRotation;
+        transform.localEulerAngles = Vector3.up * cameraHorizontalRotation;
 
         //Rotating the player object and the camera around the Y axis
         player.Rotate(Vector3.up * inputX);
