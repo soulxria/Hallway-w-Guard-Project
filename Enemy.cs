@@ -115,7 +115,7 @@ public class Enemy : MonoBehaviour
 
             if(Vector3.Angle(transform.forward, directionToTarget) < detectionAngle / 2)
             {
-                Vector3 toPlayer = Player.Instance.transform.position - enemyPosition;
+                Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
 
                 if(!Physics.RayCast(transform.position, directionToTarget, toPlayer, obstructionMask))
                     playerDetected = true;
@@ -129,7 +129,7 @@ public class Enemy : MonoBehaviour
         //did not account for obstruction
         /*
         Vecter3 enemyPosition = transform.position;
-        Vector3 toPlayer = Player.Instance.transform.position - enemyPosition;
+        Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
         toPlayer.y = 0;
 
         if (toPlayer.magnitude <= detectionRadius)
