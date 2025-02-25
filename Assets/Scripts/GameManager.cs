@@ -45,10 +45,10 @@ public class GameManager : MonoBehaviour
     //Possible death for player when attacked by enemy
     private bool isAlive;
 
-    public bool isGameOver = false;
+    public static bool isGameOver = false;
 
     //Scene loading for when something happens. Will call on it
-    public void GameOver()
+    public static void GameOver()
     {
         if (isGameOver) return;
         {

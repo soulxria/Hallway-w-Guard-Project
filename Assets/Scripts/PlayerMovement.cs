@@ -7,27 +7,27 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
 
-    public float WalkSpeed = 3.0f; //Walk speed to be slower than monster
-    public float RunSpeed = 6.0f; //Run speed to be faster than monster
-    public float Stamina = 100f; //Max stamina. Will be changed later to make it easier or harder
-    public float StaminaDrain = 10f; //How much the stamina will drain per second while running
-    public float StaminaRegen = 5f; //How much stamina regen will be per second
-    public float StaminaThreshold = 10f; //How much stamina the player needs in order to run again
-    public Slider StaminaBar;
+    public float walkSpeed = 3.0f; //Walk speed to be slower than monster
+    public float runSpeed = 6.0f; //Run speed to be faster than monster
+    public float stamina = 100f; //Max stamina. Will be changed later to make it easier or harder
+    public float staminaDrain = 10f; //How much the stamina will drain per second while running
+    public float staminaRegen = 5f; //How much stamina regen will be per second
+    public float staminaThreshold = 10f; //How much stamina the player needs in order to run again
+    public Slider staminaBar;
 
-    private float CurrentStamina;
-    private bool IsRunning = false;
+    private float currentStamina;
+    private bool isRunning = false;
 
     private Rigidbody rigidbody;
     private Vector3 MoveDirection;
 
-    private float HorizontalInput;
-    private float VerticalInput;
+    private float horizontalInput;
+    private float verticalInput;
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        CurrentStamina = Stamina;
+        currentStamina = stamina;
     }
 
     private void Update()
@@ -44,23 +44,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovementInput()
     {
-        HorizontalInput = Input.GetAxis("Horizontal"); //A/D for left and right respectively
-        VerticalInput = Input.GetAxis("Vertical"); //W/S for up and down respectively
+        horizontalInput = Input.GetAxis("Horizontal"); //A/D for left and right respectively
+        verticalInput = Input.GetAxis("Vertical"); //W/S for up and down respectively
 
-        IsRunning = Input.GetKey(KeyCode.LeftShift) && CurrentStamina > StaminaThreshold;
+        isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
 
-        if (IsRunning)
+        if (isRunning)
         {
-            MoveDirection = new Vector3(HorizontalInput, 0, VerticalInput).normalized * RunSpeed;
+            MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * runSpeed;
         }
 
         else
         {
-            MoveDirection = new Vector3(HorizontalInput, 0, VerticalInput).normalized * WalkSpeed;
+            MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * walkSpeed;
         }
     }
 
-        private void MovePlayer()
+    private void MovePlayer()
     {
         Vector3 movement = MoveDirection * Time.fixedDeltaTime;
         rigidbody.MovePosition(transform.position + movement);
@@ -68,24 +68,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleStamina()
     {
-        if (IsRunning)
+        if (isRunning)
         {
-            CurrentStamina -= StaminaDrain * Time.deltaTime;
+            currentStamina -= staminaDrain * Time.deltaTime;
         }
 
         else
         {
-            CurrentStamina += StaminaRegen * Time.deltaTime;
+            currentStamina += staminaRegen * Time.deltaTime;
         }
 
-        CurrentStamina = Mathf.Clamp(CurrentStamina, 0, Stamina);
+        currentStamina = Mathf.Clamp(currentStamina, 0, stamina);
     }
 
     private void UpdateStaminaUI()
     {
-        if (StaminaBar != null)
+        if (staminaBar != null)
         {
-            StaminaBar.value = CurrentStamina / Stamina; //Update the slider UI with percentage of stamina
+            staminaBar.value = currentStamina / stamina; //Update the slider UI with percentage of stamina
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Enemy")
+        {
+            Destroy(this.transform.gameObject);
+            GameManager.isGameOver = true;
+            GameManager.GameOver();
         }
     }
 }
