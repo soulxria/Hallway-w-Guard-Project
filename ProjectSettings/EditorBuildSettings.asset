@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Art Walkthrough.unity
+    guid: 654525a1f3859d642b991ec3242ab3ca
   m_configObjects: {}
