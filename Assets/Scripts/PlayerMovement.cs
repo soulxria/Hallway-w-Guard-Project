@@ -60,16 +60,13 @@ public class PlayerMovement : MonoBehaviour
         float inputX = Input.GetAxis("Mouse X") * mouseSensitivity; //Looking left and right
         float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity; //Looking up and down
 
-        //Rotating the camera around the X axis
-        cameraVerticalRotation -= inputY;
-        cameraHorizontalRotation -= inputX;
-        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
-        cameraHorizontalRotation = Mathf.Clamp(cameraHorizontalRotation, -90f, 90f);
-        transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
-        transform.localEulerAngles = Vector3.up * cameraHorizontalRotation;
-
         //Rotating the player object and the camera around the Y axis
         player.Rotate(Vector3.up * inputX);
+
+        //Rotating the camera around the X axis
+        cameraVerticalRotation -= inputY;
+        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
+        Camera.main.transform.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f); //Camera's vertical rotation
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
 
