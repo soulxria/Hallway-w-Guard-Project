@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = new Vector3(moveX, 0, moveY);
         transform.Translate(move * speed * Time.deltaTime);
 
-        if (Input.GetButtonDown("Fire3")
+        if (Input.GetButtonDown("Fire3"))
         {
             Interact();
         }
@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.collider.CompareTag("Door"))
             {
-                Debug.Log("Interacting with the door. Change scene.);
+                Debug.Log("Interacting with the door. Change scene.");
                 ChangeScene();
             }
 
@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Destroy(item);
     }
-    
+
     private void MovePlayer()
     {
         Vector3 movement = MoveDirection * Time.fixedDeltaTime;
