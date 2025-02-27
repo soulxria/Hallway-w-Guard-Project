@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Apple;
 
 public class Enemy : MonoBehaviour
 {
@@ -14,14 +15,14 @@ public class Enemy : MonoBehaviour
 
     private float moveSpeed = 3.5f;
     //private bool longWays = false;
-    private int chaseVal = -1;
+    private float chaseVal;
     private Rigidbody rB;   
 
     //based upon the layer system in the editor
     public LayerMask targetMask; //will look for Player layer :3
     public LayerMask obstructionMask;
 
-    public float detectionRadius = 30.0f;
+    public float detectionRadius = 4.0f;
     public float detectionAngle = 70.0f;
 
     //patrol mode variables
@@ -42,7 +43,9 @@ public class Enemy : MonoBehaviour
         rB = GetComponent<Rigidbody>();
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
-        targetPoint = 0;
+        targetPoint = Random.Range(0, 6);
+        
+        enemyAgent.SetDestination(patrolPoints[targetPoint].position);
     }
 
     void Update ()
@@ -50,42 +53,30 @@ public class Enemy : MonoBehaviour
         //check if player is in cone, if so start timer
         LookForPlayer();
         //once timer hits zero, set chaseOn true and call chasemode
-        if (preChase == 0)
+        if (preChase <= 0)
         {
             ChaseMode(0);
-            enemyAgent.destination = target.position;
+            enemyAgent.SetDestination(target.position);
             if (chaseVal == 2){
                 preChase = 2.0f;
             }
         }
         else {
-            //Movement Path
-            /*
-            //walk with a timer, after x seconds turn right
-            turnTimer -= Time.deltaTime;
-            rB.MovePosition(this.transform.position + this.transform.forward * moveSpeed * Time.deltaTime); 
-            if (turnTimer == 0){
-                rB.MovePosition(this.transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self));
-                if (longWays){
-                    turnTimer = 5.0f;
-                    longWays = false;
-                }
-                else{
-                     turnTimer = 2.0f;
-                     longWays = true;
-                }
-            }
-            */
-
             //Movement Patrol (Randomized)
-            if (transform.position == patrolPoints[targetPoint].position)
+
+            if (Vector3.Distance(enemyAgent.transform.position, patrolPoints[targetPoint].position) < 0.5f)
             {
+                Debug.Log("Target hit, changing");
                 targetPoint = changeTargetInt();
+                SetPosition();
             }
-            transform.position = Vector3.MoveTowards(transform.position, patrolPoints[targetPoint].position, moveSpeed * Time.deltaTime);
         }
     }
 
+    void SetPosition()
+    {
+        enemyAgent.SetDestination(patrolPoints[targetPoint].position);
+    }
     int changeTargetInt()
     {
         int newVal = Random.Range(0,6);
@@ -112,25 +103,33 @@ public class Enemy : MonoBehaviour
 
         Physics.CheckSphere(transform.position, detectionRadius, targetMask);
 
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
+        Vector3 directionToTarget = (target.position - transform.position).normalized;
 
-        if(Vector3.Angle(transform.forward, directionToTarget) < detectionAngle / 2)
+        if(Vector3.Dot(directionToTarget, transform.forward) > Mathf.Cos(detectionAngle * 0.5f * Mathf.Deg2Rad))
             {
                 //Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
                 //toPlayer.y = 0;
                 float toPlayer = Vector3.Distance(player.transform.position, enemyPosition);
 
-                if (Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask)) 
+                if (!Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask)) 
                 {
                     playerDetected = true;
+                    if (playerDetected == true)
+                    {
+                        preChase = preChase - Time.deltaTime;
+                        Debug.Log("" + preChase);
+                    }
                     Debug.Log("player found");
-                    preChase -= Time.deltaTime;
+                    
                 }
                 else
                     playerDetected = false;
             }
         else if (!playerDetected)
             playerDetected = false;
+
+        if (!playerDetected)
+            preChase = 2.0f;
         //did not account for obstruction
         /*
         Vecter3 enemyPosition = transform.position;
@@ -159,9 +158,11 @@ public class Enemy : MonoBehaviour
         if (chaseOn){
             if (!playerDetected)
             {
-                chaseVal += (int)Time.deltaTime;
+                Debug.Log("Chase timer decreasing");
+                chaseVal += Time.deltaTime;
+                Debug.Log("Chase end timer =" + chaseVal);
                 //if the tick hits 2 (since its fixed update), send back to chaseVal with a val of 2
-                if (chaseVal == 2)
+                if (chaseVal >= 2)
                 {
                     ChaseMode(2);
                 }
@@ -177,17 +178,21 @@ public class Enemy : MonoBehaviour
      
     void ChaseMode (int chaseVal)
     {
+        Debug.Log("Timer hit 0, Chasing");
         //if chase is 0, turn up movespeed, change the cone angle and run at player via nav mesh
-        if(chaseVal == 0){
+        if (chaseVal == 0){
             moveSpeed = 5.5f;
             chaseOn = true;
             detectionAngle = 50.0f;
         }
-        else if (chaseVal == 2)
+        else if (chaseVal >= 2)
         {
+            Debug.Log("Resetting");
+            SetPosition();
             moveSpeed = 3.5f;
             chaseOn = false;
             detectionAngle = 70.0f;
+            preChase = 2.0f;
         }
         //once chaseval hits 2, call off chasemode (set every stat back to normal)
         
