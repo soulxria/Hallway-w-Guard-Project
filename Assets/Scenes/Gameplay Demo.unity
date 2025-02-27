@@ -1245,6 +1245,8 @@ MonoBehaviour:
   staminaDrain: 10
   staminaRegen: 5
   staminaThreshold: 10
+  mouseSensitivity: 2
+  player: {fileID: 1256758408}
   staminaBar: {fileID: 0}
 --- !u!195 &1256758410
 NavMeshAgent:
