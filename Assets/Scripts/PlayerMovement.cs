@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
         float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity; //Looking up and down
 
         //Xbox thumbstick inputs
-        float moveX = Input.GetAxis("Horizontal");
+        /* float moveX = Input.GetAxis("Horizontal");
         float moveY = Input.GetAxis("Vertical");
 
         //Joystick input for Xbox
@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Fire3"))
         {
             Interact();
-        }
+        } */
 
         //Rotating the player object and the camera around the Y axis
         player.Rotate(Vector3.up * inputX);
@@ -97,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
             MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * walkSpeed;
         }
     }
-
+    /*
     void Interact()
     {
         RaycastHit hit;
@@ -116,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
+    
     void ChangeScene()
     {
         if (gameManager != null)
@@ -129,12 +129,12 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("GameManager reference is missing!");
         }
     }
-
+    
     void PickUpItem(GameObject item)
     {
         Destroy(item);
     }
-
+    */
     private void MovePlayer()
     {
         Vector3 movement = MoveDirection * Time.fixedDeltaTime;
