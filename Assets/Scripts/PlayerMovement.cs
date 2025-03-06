@@ -33,11 +33,14 @@ public class PlayerMovement : MonoBehaviour
 
     //variables i'm using for stare of death
     public GameObject enemy;
+    public GameObject key;
     public LayerMask targetMask; //will look for Enemy layer :3
     public LayerMask obstructionMask;
     private float sightRadius = 10.0f;
     private float sightAngle = 20.0f;
     private bool enemyDetected;
+    private bool pickupRange;
+    public bool hasKey;
     Enemy enemyS;
 
     private void Start()
@@ -56,6 +59,17 @@ public class PlayerMovement : MonoBehaviour
         HandleStamina();
         UpdateStaminaUI();
         CheckForStaring();
+        if (pickupRange)
+        {
+            if (Input.GetKey(KeyCode.E))
+            {
+                hasKey = true;
+                if (key != null)
+                {
+                    Destroy(key);
+                }
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -175,6 +189,15 @@ public class PlayerMovement : MonoBehaviour
             Destroy(this.transform.gameObject);
             GameManager.isGameOver = true;
             GameManager.GameOver();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "key")
+        {
+            Debug.Log("Can Pickup");
+            pickupRange = true;
         }
     }
 }
