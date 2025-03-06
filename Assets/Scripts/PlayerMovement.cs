@@ -31,10 +31,20 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
+    //variables i'm using for stare of death
+    public GameObject enemy;
+    public LayerMask targetMask; //will look for Enemy layer :3
+    public LayerMask obstructionMask;
+    private float sightRadius = 10.0f;
+    private float sightAngle = 20.0f;
+    private bool enemyDetected;
+    Enemy enemyS;
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
+        enemyS = enemy.GetComponent<Enemy>();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -45,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         HandleMovementInput();
         HandleStamina();
         UpdateStaminaUI();
+        CheckForStaring();
     }
 
     private void FixedUpdate()
@@ -82,6 +93,50 @@ public class PlayerMovement : MonoBehaviour
         {
             MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * walkSpeed;
         }
+    }
+
+    void CheckForStaring()
+    {
+        if (enemy == null)
+        {
+            return;
+        }
+
+        Vector3 myPosition = transform.position;
+
+        Physics.CheckSphere(transform.position, sightRadius, targetMask);
+
+        Vector3 directionToTarget = (enemy.transform.position - transform.position).normalized;
+
+        if (Vector3.Dot(directionToTarget, transform.forward) > Mathf.Cos(sightAngle * 0.5f * Mathf.Deg2Rad))
+        {
+            //Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
+            //toPlayer.y = 0;
+            float toPlayer = Vector3.Distance(enemy.transform.position, myPosition);
+
+            if (!Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask))
+            {
+                enemyDetected = true;
+                if (enemyDetected == true)
+                {
+                    enemyS.preDeathSprint = enemyS.preDeathSprint - Time.deltaTime;
+                    if (enemyS.preDeathSprint <= 0)
+                    {
+                        enemyS.ChaseMode(3);
+                    }
+                    Debug.Log("" + enemyS.preDeathSprint);
+                }
+                Debug.Log("enemy found");
+
+            }
+            else
+                enemyDetected = false;
+        }
+        else if (!enemyDetected)
+            enemyDetected = false;
+
+        if (!enemyDetected)
+            enemyS.preDeathSprint = 2.0f;
     }
 
     private void MovePlayer()

@@ -7,6 +7,8 @@ using UnityEngine.Apple;
 
 public class Enemy : MonoBehaviour
 {
+    public float preDeathSprint = 2.0f;
+    private bool isCooked;
     private bool chaseOn = false;
     private float preChase = 2.0f;
     private bool playerDetected = false;
@@ -137,7 +139,7 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         //checks if player is in LoS cone (way thinner during chase mode), adds to chaseVal each time its unsuccessful'
-        if (chaseOn){
+        if (chaseOn && !isCooked){
             if (!playerDetected)
             {
                 Debug.Log("Chase timer decreasing");
@@ -158,16 +160,17 @@ public class Enemy : MonoBehaviour
 
     }
      
-    void ChaseMode (int chaseVal)
+    public void ChaseMode (int chaseVal)
     {
-        Debug.Log("Timer hit 0, Chasing");
+        
         //if chase is 0, turn up movespeed, change the cone angle and run at player via nav mesh
         if (chaseVal == 0){
+            Debug.Log("Timer hit 0, Chasing");
             enemyAgent.speed = 5.5f;
             chaseOn = true;
             detectionAngle = 50.0f;
         }
-        else if (chaseVal >= 2)
+        else if (chaseVal == 2)
         {
             Debug.Log("Resetting");
             SetPosition();
@@ -175,6 +178,14 @@ public class Enemy : MonoBehaviour
             chaseOn = false;
             detectionAngle = 70.0f;
             preChase = 2.0f;
+        }
+        else if (chaseVal == 3)
+        {
+            Debug.Log("DEATH");
+            enemyAgent.speed = 70.5f;
+            chaseOn = true;
+            isCooked = true;
+            enemyAgent.SetDestination(target.position);
         }
         //once chaseval hits 2, call off chasemode (set every stat back to normal)
         

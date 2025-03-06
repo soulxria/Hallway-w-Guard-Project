@@ -1034,6 +1034,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3960253970779314676, guid: f39059ead82cc924d88185e43e60dfef, type: 3}
   m_PrefabInstance: {fileID: 360193543586035580}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1574124404 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8742955900558755287, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
+  m_PrefabInstance: {fileID: 2423726336158678400}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2098036828
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,6 +1252,18 @@ PrefabInstance:
     - target: {fileID: 4109259613615366756, guid: ef52bc71e0b4d4d4a867f31587631096, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882006123345566751, guid: ef52bc71e0b4d4d4a867f31587631096, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 1574124404}
+    - target: {fileID: 7882006123345566751, guid: ef52bc71e0b4d4d4a867f31587631096, type: 3}
+      propertyPath: targetMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882006123345566751, guid: ef52bc71e0b4d4d4a867f31587631096, type: 3}
+      propertyPath: obstructionMask.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
