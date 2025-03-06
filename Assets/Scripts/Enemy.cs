@@ -44,7 +44,8 @@ public class Enemy : MonoBehaviour
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
         targetPoint = Random.Range(0, 6);
-        
+        enemyAgent.speed = 2.5f;
+
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
     }
 
@@ -130,25 +131,6 @@ public class Enemy : MonoBehaviour
 
         if (!playerDetected)
             preChase = 2.0f;
-        //did not account for obstruction
-        /*
-        Vecter3 enemyPosition = transform.position;
-        Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
-        toPlayer.y = 0;
-
-        if (toPlayer.magnitude <= detectionRadius)
-        {
-            if (Vector3.Dot(toPlayer.normalized, transform.forward) > Mathf.Cos(detectionAngle * 0.5f * Mathf.Deg2Rad))
-            {
-                playerDetected = true;
-                preChase -= Time.deltaTime;
-
-                return Player.Instance;
-            } 
-            
-        }
-
-        return null; */
     }
 
 
@@ -181,7 +163,7 @@ public class Enemy : MonoBehaviour
         Debug.Log("Timer hit 0, Chasing");
         //if chase is 0, turn up movespeed, change the cone angle and run at player via nav mesh
         if (chaseVal == 0){
-            moveSpeed = 5.5f;
+            enemyAgent.speed = 5.5f;
             chaseOn = true;
             detectionAngle = 50.0f;
         }
@@ -189,7 +171,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("Resetting");
             SetPosition();
-            moveSpeed = 3.5f;
+            enemyAgent.speed = 2.5f;
             chaseOn = false;
             detectionAngle = 70.0f;
             preChase = 2.0f;
