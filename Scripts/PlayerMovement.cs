@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
         //Mouse and key inputs
         horizontalInput = Input.GetAxis("Horizontal"); //A/D for left and right respectively
         verticalInput = Input.GetAxis("Vertical"); //W/S for forward and backwards respectively
+
         float inputX = Input.GetAxis("Mouse X") * mouseSensitivity; //Looking left and right
         float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity; //Looking up and down
 
@@ -80,21 +81,28 @@ public class PlayerMovement : MonoBehaviour
         //Rotating the player object and the camera around the Y axis
         player.Rotate(Vector3.up * inputX);
 
+
         //Rotating the camera around the X axis
-        cameraVerticalRotation -= inputY;
-        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
-        Camera.main.transform.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f); //Camera's vertical rotation
+        cameraVerticalRotation -= inputY; // Adjust vertical rotation
+        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f); // Clamp it to -90 to 90 degrees
+        Camera.main.transform.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f); // Apply to camera
+
+        Vector3 cameraForward = Camera.main.transform.forward;
+        cameraForward.y = 0f;
+        Vector3 cameraRight = Camera.main.transform.right;
+
+        MoveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
 
         if (isRunning)
         {
-            MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * runSpeed;
+            MoveDirection *= runSpeed;
         }
 
         else
         {
-            MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * walkSpeed;
+            MoveDirection *= walkSpeed;
         }
     }
     /*
@@ -137,8 +145,11 @@ public class PlayerMovement : MonoBehaviour
     */
     private void MovePlayer()
     {
-        Vector3 movement = MoveDirection * Time.fixedDeltaTime;
-        rigidbody.MovePosition(transform.position + movement);
+        if (MoveDirection.magnitude > 0.1f)
+        {
+            Vector3 movement = MoveDirection * Time.fixedDeltaTime;
+            rigidbody.MovePosition(transform.position + movement);
+        }
     }
 
     private void HandleStamina()
