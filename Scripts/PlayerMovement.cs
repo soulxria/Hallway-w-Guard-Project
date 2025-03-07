@@ -5,43 +5,37 @@ using UnityEngine.UI; //For UI stamina bar
 
 public class PlayerMovement : MonoBehaviour
 {
-    public static PlayerMovement instance;
-
     public GameManager gameManager; //GameManager reference
 
-    public float walkSpeed = 3.0f; //Walk speed to be slower than monster
-    public float runSpeed = 6.0f; //Run speed to be faster than monster
-    public float stamina = 100f; //Max stamina. Will be changed later to make it easier or harder
-    public float staminaDrain = 10f; //How much the stamina will drain per second while running
-    public float staminaRegen = 5f; //How much stamina regen will be per second
-    public float staminaThreshold = 10f; //How much stamina the player needs in order to run again
-    public float mouseSensitivity = 2f; //How senstive the camera mouse movement will be
-    float cameraVerticalRotation = 0f; //Setting up how the variable will handle movement
-    float cameraHorizontalRotation = 0f; //Setting up for the horizontal movement
-    public float interactionRange = 3f; //Distance for the player to interact with an object (ex: door)
-    public LayerMask interactableLayer; //To detect objects that are interactable
-
-    bool lockedCursor = true;
-
-    public Transform player;
-    public Slider staminaBar;
+    public float lookSpeedX = 2.0f; //Camera movement for left and right
+    public float lookSpeedY = 2.0f; //Camera movement for up and down
+    
+    public float walkSpeed = 3.0f; //Walking speed
+    public float runSpeed = 6.0f; //Running speed
+    private bool isRunning = false;
+    private Vector3 moveDirection;
+    private float cameraVerticalRotation = 0f;
 
     private float currentStamina;
-    private bool isRunning = false;
+    public float stamina = 100f; //Max stamina
+    public float staminaDrain = 10f; //How much stamina will drain per second while running
+    public float staminaRegen = 5f; //Stamina regen per second
+    public float staminaThreshold = 10f; //How much stamina is needed in order for player to run again
+    public Slider staminaBar; //Setting up stamina bar UI
+
+    public float interactionRange = 3f; //Distance for player to interact with an object (ex: door)
+    public LayerMask interactableLayer; //Detecting object that can be picked up
+    
+    public Transform playerCamera; //Reference to current player camera (Cinemachine Virtual Camera)
+
+    private float rotationX = 0f; //Current vertical rotation of the camera
 
     private Rigidbody rigidbody;
-    private Vector3 MoveDirection;
-
-    private float horizontalInput;
-    private float verticalInput;
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -56,102 +50,49 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
-    private void HandleMovementInput()
+    void HandleMovementInput()
     {
-        //Mouse and key inputs
-        horizontalInput = Input.GetAxis("Horizontal"); //A/D for left and right respectively
-        verticalInput = Input.GetAxis("Vertical"); //W/S for forward and backwards respectively
+        float mouseX = Input.GetAxis("Mouse X") * lookSpeedX;
+        float mouseY = Input.GetAxis("Mouse Y") * lookSpeedY;
 
-        float inputX = Input.GetAxis("Mouse X") * mouseSensitivity; //Looking left and right
-        float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity; //Looking up and down
+        transform.Rotate(Vector3.up * mouseX);
 
-        //Xbox thumbstick inputs
-        /* float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
+        cameraVerticalRotation -= mouseY;
+        cameraVerticalRotation = Mathf.Clamp(rotationX, -90f, 90f);
+        playerCamera.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f);
 
-        //Joystick input for Xbox
-        Vector3 move = new Vector3(moveX, 0, moveY);
-        transform.Translate(move * speed * Time.deltaTime);
-
-        if (Input.GetButtonDown("Fire3"))
-        {
-            Interact();
-        } */
-
-        //Rotating the player object and the camera around the Y axis
-        player.Rotate(Vector3.up * inputX);
-
-
-        //Rotating the camera around the X axis
-        cameraVerticalRotation -= inputY; // Adjust vertical rotation
-        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f); // Clamp it to -90 to 90 degrees
-        Camera.main.transform.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f); // Apply to camera
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 cameraForward = Camera.main.transform.forward;
         cameraForward.y = 0f;
         Vector3 cameraRight = Camera.main.transform.right;
 
-        MoveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
+        moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
 
         if (isRunning)
         {
-            MoveDirection *= runSpeed;
+            moveDirection *= runSpeed;
         }
 
         else
         {
-            MoveDirection *= walkSpeed;
-        }
-    }
-    /*
-    void Interact()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, interactionRange, interactableLayer))
-        {
-            if (hit.collider.CompareTag("Door"))
-            {
-                Debug.Log("Interacting with the door. Change scene.");
-                ChangeScene();
-            }
-
-            else if (hit.collider.CompareTag("Item"))
-            {
-                Debug.Log("Picking up item.");
-                PickUpItem(hit.collider.gameObject);
-            }
-        }
-    }
-    
-    void ChangeScene()
-    {
-        if (gameManager != null)
-        {
-            gameManager.ChangeScene(""); //Scene name to change it to
+            moveDirection *= walkSpeed;
         }
 
-        else
-        {
-            Debug.LogError("GameManager reference is missing!");
-        }
+        transform.Translate(moveDirection * Time.deltaTime, Space.World);
     }
-    
-    void PickUpItem(GameObject item)
-    {
-        Destroy(item);
-    }
-    */
+
     private void MovePlayer()
     {
-        if (MoveDirection.magnitude > 0.1f)
+        if (moveDirection.magnitude > 0.1f)
         {
-            Vector3 movement = MoveDirection * Time.fixedDeltaTime;
+            Vector3 movement = moveDirection * Time.fixedDeltaTime;
             rigidbody.MovePosition(transform.position + movement);
         }
     }
-
     private void HandleStamina()
     {
         if (isRunning)
@@ -172,16 +113,6 @@ public class PlayerMovement : MonoBehaviour
         if (staminaBar != null)
         {
             staminaBar.value = currentStamina / stamina; //Update the slider UI with percentage of stamina
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.name == "Enemy")
-        {
-            Destroy(this.transform.gameObject);
-            GameManager.isGameOver = true;
-            GameManager.GameOver();
         }
     }
 }
