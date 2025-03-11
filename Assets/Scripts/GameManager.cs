@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     {
         enemyT = TutorialEnemy.GetComponent<TutorialEnemy>();
         playerT = PlayerMovement.GetComponent<PlayerMovement>();
-
+        Instantiate(PlayerMovement, spawnPoint.position, PlayerMovement.transform.rotation);
     }
 
     //Scene loading
