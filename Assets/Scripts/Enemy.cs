@@ -90,15 +90,17 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void soundSpeedController()
+    void soundAnimSpeedController()
     {
         if (walking)
         {
             PlaySoundOnce(footstepsWalk);
+            enemyAnimator.SetTrigger("Crawl");
         }
         else if (running)
         {
             PlaySoundOnce(footstepsRun);
+            enemyAnimator.SetTrigger("Sprint");
         }
     }
 

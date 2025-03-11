@@ -101,10 +101,12 @@ public class TutorialEnemy : MonoBehaviour
         if (walking)
         {
             PlaySoundOnce(footstepsWalk);
+            enemyAnimator.SetTrigger("Crawl");
         }
         else if (running)
         {
             PlaySoundOnce(footstepsRun);
+            enemyAnimator.SetTrigger("Sprint");
         }
     }
     void CheckForKey()
