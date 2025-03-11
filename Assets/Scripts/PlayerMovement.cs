@@ -5,7 +5,6 @@ using UnityEngine.UI; //For UI stamina bar
 
 public class PlayerMovement : MonoBehaviour
 {
-    public static PlayerMovement instance;
     public GameManager gameManager; //GameManager reference
 
     public float lookSpeedX = 2.0f; //Camera movement for left and right
@@ -35,28 +34,10 @@ public class PlayerMovement : MonoBehaviour
 
     private HashSet<string> playerKeys = new HashSet<string>(); //Stores the keys that the player is going to pick up
 
-    //variables i'm using for stare of death
-    public GameObject enemy;
-    public LayerMask targetMask; //will look for Enemy layer :3
-    public LayerMask obstructionMask;
-    private float sightRadius = 10.0f;
-    private float sightAngle = 20.0f;
-    private bool enemyDetected;
-    Enemy enemyS;
-    public bool hasKey;
-
-    //sound variables
-    AudioSource audioSource;
-    public AudioClip footstepsWalk;
-    public AudioClip footstepsRun;
-    public AudioClip keyPickup;
-
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
-        enemyS = enemy.GetComponent<Enemy>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -64,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
         HandleMovementInput();
         HandleStamina();
         UpdateStaminaUI();
-        CheckForStaring();
         CheckForKeyPickup();
     }
 
@@ -73,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
-    private void HandleMovementInput()
+    void HandleMovementInput()
     {
         float mouseX = Input.GetAxis("Mouse X") * lookSpeedX;
         float mouseY = Input.GetAxis("Mouse Y") * lookSpeedY;
@@ -81,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
 
         cameraVerticalRotation -= mouseY;
-        cameraVerticalRotation = Mathf.Clamp(rotationX, -90f, 90f);
+        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
         playerCamera.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f);
 
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -98,7 +78,6 @@ public class PlayerMovement : MonoBehaviour
         if (isRunning)
         {
             moveDirection *= runSpeed;
-            PlaySoundOnce(footstepsRun);
         }
 
         else
@@ -109,60 +88,14 @@ public class PlayerMovement : MonoBehaviour
         transform.Translate(moveDirection * Time.deltaTime, Space.World);
     }
 
-    void CheckForStaring()
-    {
-        if (enemy == null)
-        {
-            return;
-        }
-
-        Vector3 myPosition = transform.position;
-
-        Physics.CheckSphere(transform.position, sightRadius, targetMask);
-
-        Vector3 directionToTarget = (enemy.transform.position - transform.position).normalized;
-
-        if (Vector3.Dot(directionToTarget, transform.forward) > Mathf.Cos(sightAngle * 0.5f * Mathf.Deg2Rad))
-        {
-            //Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
-            //toPlayer.y = 0;
-            float toPlayer = Vector3.Distance(enemy.transform.position, myPosition);
-
-            if (!Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask))
-            {
-                enemyDetected = true;
-                if (enemyDetected == true)
-                {
-                    enemyS.preDeathSprint = enemyS.preDeathSprint - Time.deltaTime;
-                    if (enemyS.preDeathSprint <= 0)
-                    {
-                        enemyS.ChaseMode(3);
-                    }
-                    Debug.Log("" + enemyS.preDeathSprint);
-                }
-                Debug.Log("enemy found");
-
-            }
-            else
-                enemyDetected = false;
-        }
-        else if (!enemyDetected)
-            enemyDetected = false;
-
-        if (!enemyDetected)
-            enemyS.preDeathSprint = 2.0f;
-    }
-
     private void MovePlayer()
     {
         if (moveDirection.magnitude > 0.1f)
         {
             Vector3 movement = moveDirection * Time.fixedDeltaTime;
             rigidbody.MovePosition(transform.position + movement);
-            PlaySoundOnce(footstepsWalk);
         }
     }
-
     private void HandleStamina()
     {
         if (isRunning)
@@ -186,15 +119,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.name == "Enemy")
-        {
-            Destroy(this.transform.gameObject);
-            GameManager.isGameOver = true;
-        }
-    }
-
     public bool HasKey(string keyName)
     {
         return playerKeys.Contains(keyName); //Checking if player has a certain key
@@ -204,9 +128,6 @@ public class PlayerMovement : MonoBehaviour
     {
         playerKeys.Add(keyName); //Adds key to collection (there are no duplicates)
         Debug.Log($"You have picked up the {keyName}");
-        audioSource.loop = false;
-        PlaySoundOnce(keyPickup);
-        audioSource.loop = true;
     }
 
     private void CheckForKeyPickup()
@@ -224,10 +145,5 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void PlaySoundOnce(AudioClip clip)
-    {
-        audioSource.PlayOneShot(clip);
     }
 }

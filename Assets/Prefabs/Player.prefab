@@ -150,32 +150,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26b7abae13c6924d953cade1c6d78e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  lookSpeedX: 2
-  lookSpeedY: 2
   walkSpeed: 3
   runSpeed: 6
   stamina: 100
   staminaDrain: 10
   staminaRegen: 5
   staminaThreshold: 10
+  mouseSensitivity: 2
+  player: {fileID: 4109259613615366756}
   staminaBar: {fileID: 0}
-  interactionRange: 3
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  playerCamera: {fileID: 0}
-  enemy: {fileID: 0}
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 0
-  obstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  hasKey: 0
-  footstepsWalk: {fileID: 0}
-  footstepsRun: {fileID: 0}
-  keyPickup: {fileID: 0}
 --- !u!195 &7314384141571959284
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -209,8 +192,6 @@ GameObject:
   - component: {fileID: 5717842422311133557}
   - component: {fileID: 6551956484859413817}
   - component: {fileID: 1035710691429123541}
-  - component: {fileID: 7202112461888969219}
-  - component: {fileID: 8717263001061190836}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -292,93 +273,3 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7217084840200246098}
   m_Enabled: 1
---- !u!114 &7202112461888969219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7217084840200246098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86832f84a0cf34eb9b89129d49b7a15e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startConfig: {fileID: 11400000, guid: 6a4cfee667ae5420fbc0ff45d34bb1d5, type: 2}
-  crtRenderSettings: {fileID: 11400000, guid: 2d929546960894d169f1999a321e4ff4, type: 2}
-  _runtimeMaterial: {fileID: 0}
-  data:
-    pixelationAmount: 0
-    maxColorChannels:
-      red: 0
-      green: 0
-      blue: 0
-      greyScale: 0
-    dithering4: 0
-    dithering8: 0
-    vignette: 0.292
-    innerCurve: 20
-    monitorCurve: 0.038
-    monitorInnerSize:
-      width: 0
-      height: 0
-    monitorOutterSize:
-      width: 0.1
-      height: 0.1
-    zoom: 1.19
-    monitorRoundness: 0.2
-    monitorTexture: {fileID: 0}
-    monitorColor: {r: 0.121796034, g: 0.12775578, b: 0.16037738, a: 1}
-    innerMonitorDarkness: 0.215
-    innerMonitorShine: 0.01
-    colorScans:
-      greenChannelMultiplier: -0.355
-      redBlueChannelMultiplier: -0.334
-      sizeMultiplier: 3.06
-    innerMonitorShineRadius: -0.087
-    innerMonitorShineCurve: 10
---- !u!114 &8717263001061190836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7217084840200246098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86832f84a0cf34eb9b89129d49b7a15e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startConfig: {fileID: 11400000, guid: 6a4cfee667ae5420fbc0ff45d34bb1d5, type: 2}
-  crtRenderSettings: {fileID: 11400000, guid: 2d929546960894d169f1999a321e4ff4, type: 2}
-  _runtimeMaterial: {fileID: 0}
-  data:
-    pixelationAmount: 0
-    maxColorChannels:
-      red: 0
-      green: 0
-      blue: 0
-      greyScale: 0
-    dithering4: 0
-    dithering8: 0
-    vignette: 0.292
-    innerCurve: 20
-    monitorCurve: 0.038
-    monitorInnerSize:
-      width: 0
-      height: 0
-    monitorOutterSize:
-      width: 0.1
-      height: 0.1
-    zoom: 1.19
-    monitorRoundness: 0.2
-    monitorTexture: {fileID: 0}
-    monitorColor: {r: 0.121796034, g: 0.12775578, b: 0.16037738, a: 1}
-    innerMonitorDarkness: 0.215
-    innerMonitorShine: 0.01
-    colorScans:
-      greenChannelMultiplier: -0.355
-      redBlueChannelMultiplier: -0.334
-      sizeMultiplier: 3.06
-    innerMonitorShineRadius: -0.087
-    innerMonitorShineCurve: 10

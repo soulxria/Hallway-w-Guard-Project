@@ -35,7 +35,6 @@ public class TutorialEnemy : MonoBehaviour
     public Transform target;
     private Animator enemyAnimator;
     private int targetPoint;
-    public Vector3 startingPos;
 
     public GameObject player;
     public GameObject enemy;
@@ -63,17 +62,16 @@ public class TutorialEnemy : MonoBehaviour
         enemyAgent.speed = 1.5f;
         playerS = player.GetComponent<PlayerMovement>();
         audioSource = GetComponent<AudioSource>();
-        startingPos = patrolPoints[targetPoint].position;
 
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
         audioSource.loop = true;
-        walking = true;
     }
 
     void Update()
     {
         //check if player is in cone, if so start timer
         LookForPlayer();
+        //CheckForKey();
 
         //once timer hits zero, set chaseOn true and call chasemode
         if (preChase <= 0)
@@ -100,21 +98,23 @@ public class TutorialEnemy : MonoBehaviour
 
     void soundSpeedController()
     {
-        if (this.gameObject != null)
+        if (walking)
         {
-            if (walking)
-            {
-                PlaySoundOnce(footstepsWalk);
-                enemyAnimator.SetTrigger("Crawl");
-            }
-            else if (running)
-            {
-                PlaySoundOnce(footstepsRun);
-                enemyAnimator.SetTrigger("Sprint");
-            }
+            PlaySoundOnce(footstepsWalk);
         }
-            
+        else if (running)
+        {
+            PlaySoundOnce(footstepsRun);
+        }
     }
+    /*void CheckForKey()
+    {
+        if (playerS.hasKey)
+        {
+            Instantiate(enemy, patrolPoints[targetPoint].position, transform.rotation);
+            walking = true;
+        }
+    }*/
     void SetPosition()
     {
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
