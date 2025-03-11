@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,10 +15,20 @@ public class GameManager : MonoBehaviour
     public GameObject TutorialEnemy;
     public GameObject Enemy;
     public SceneManager sceneManager;
+    TutorialEnemy enemyT;
+    PlayerMovement playerT;
     public int currentLevel = 1;
     public bool isVictory = false;
     public bool isCredits = false;
     public bool isStartScreen = true;
+    public Transform spawnPoint;
+
+    private void Start()
+    {
+        enemyT = TutorialEnemy.GetComponent<TutorialEnemy>();
+        playerT = PlayerMovement.GetComponent<PlayerMovement>();
+
+    }
 
     //Scene loading
     public void mainMenu()
@@ -29,18 +40,21 @@ public class GameManager : MonoBehaviour
     public void Outside()
     {
         sceneManager.LoadNextScene("finalExterior");
+        Instantiate(PlayerMovement, spawnPoint.position, PlayerMovement.transform.rotation);
         Debug.Log("Outside has loaded");
     }
 
     public void Inside()
     {
         sceneManager.LoadNextScene("finalInterior");
+        Instantiate(PlayerMovement, spawnPoint.position, PlayerMovement.transform.rotation);
         Debug.Log("Inside has loaded");
     }
 
     public void Attic()
     {
         sceneManager.LoadNextScene("finalAttic");
+        Instantiate(PlayerMovement, spawnPoint.position, PlayerMovement.transform.rotation);
         Debug.Log("Attic has loaded");
     }
 
@@ -57,6 +71,8 @@ public class GameManager : MonoBehaviour
     private bool isAlive;
 
     public static bool isGameOver = false;
+
+
 
     //Scene loading for when something happens. Will call on it
     public void GameOver()
@@ -121,6 +137,11 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
             Debug.Log("Game has quit.");
+        }
+
+        if (playerT.hasKey)
+        {
+            Instantiate(TutorialEnemy, enemyT.startingPos, transform.rotation);
         }
     }
 }
