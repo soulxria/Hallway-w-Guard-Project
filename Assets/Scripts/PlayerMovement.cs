@@ -45,11 +45,18 @@ public class PlayerMovement : MonoBehaviour
     Enemy enemyS;
     public bool hasKey;
 
+    //sound variables
+    AudioSource audioSource;
+    public AudioClip footstepsWalk;
+    public AudioClip footstepsRun;
+    public AudioClip keyPickup;
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
         enemyS = enemy.GetComponent<Enemy>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -91,6 +98,7 @@ public class PlayerMovement : MonoBehaviour
         if (isRunning)
         {
             moveDirection *= runSpeed;
+            PlaySoundOnce(footstepsRun);
         }
 
         else
@@ -151,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 movement = moveDirection * Time.fixedDeltaTime;
             rigidbody.MovePosition(transform.position + movement);
+            PlaySoundOnce(footstepsWalk);
         }
     }
 
@@ -195,6 +204,9 @@ public class PlayerMovement : MonoBehaviour
     {
         playerKeys.Add(keyName); //Adds key to collection (there are no duplicates)
         Debug.Log($"You have picked up the {keyName}");
+        audioSource.loop = false;
+        PlaySoundOnce(keyPickup);
+        audioSource.loop = true;
     }
 
     private void CheckForKeyPickup()
@@ -212,5 +224,10 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void PlaySoundOnce(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }

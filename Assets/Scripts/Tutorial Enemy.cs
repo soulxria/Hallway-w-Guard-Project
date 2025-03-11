@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -39,6 +40,16 @@ public class TutorialEnemy : MonoBehaviour
     public GameObject enemy;
     PlayerMovement playerS;
 
+    //sound variables
+    AudioSource audioSource;
+    public AudioClip footstepsWalk;
+    public AudioClip footstepsRun;
+    public AudioClip alertNoise;
+    public AudioClip chaseMusic;
+    public AudioClip chaseEscape;
+    private bool walking;
+    private bool running;
+
 
 
 
@@ -50,8 +61,10 @@ public class TutorialEnemy : MonoBehaviour
         targetPoint = Random.Range(0, 6);
         enemyAgent.speed = 1.5f;
         playerS = player.GetComponent<PlayerMovement>();
+        audioSource = GetComponent<AudioSource>();
 
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
+        audioSource.loop = true;
     }
 
     void Update()
@@ -83,11 +96,23 @@ public class TutorialEnemy : MonoBehaviour
         }
     }
 
+    void soundSpeedController()
+    {
+        if (walking)
+        {
+            PlaySoundOnce(footstepsWalk);
+        }
+        else if (running)
+        {
+            PlaySoundOnce(footstepsRun);
+        }
+    }
     void CheckForKey()
     {
         if (playerS.hasKey)
         {
             Instantiate(enemy, patrolPoints[targetPoint].position, transform.rotation);
+            walking = true;
         }
     }
     void SetPosition()
@@ -137,6 +162,9 @@ public class TutorialEnemy : MonoBehaviour
                     Debug.Log("" + preChase);
                 }
                 Debug.Log("player found");
+                audioSource.loop = false;
+                PlaySoundOnce(alertNoise);
+                audioSource.loop = true;
 
             }
             else
@@ -182,18 +210,26 @@ public class TutorialEnemy : MonoBehaviour
         if (chaseVal == 0)
         {
             Debug.Log("Timer hit 0, Chasing");
-            enemyAgent.speed = 4.0f;
+            PlaySoundOnce(chaseMusic);
+            enemyAgent.speed = 5.5f;
             chaseOn = true;
             detectionAngle = 50.0f;
+            walking = false;
+            running = true;
         }
         else if (chaseVal == 2)
         {
             Debug.Log("Resetting");
             SetPosition();
-            enemyAgent.speed = 1.5f;
+            audioSource.loop = false;
+            PlaySoundOnce(chaseEscape);
+            audioSource.loop = true;
+            enemyAgent.speed = 2.5f;
             chaseOn = false;
             detectionAngle = 70.0f;
             preChase = 2.0f;
+            running = false;
+            walking = true;
         }
         else if (chaseVal == 3)
         {
@@ -202,10 +238,16 @@ public class TutorialEnemy : MonoBehaviour
             chaseOn = true;
             isCooked = true;
             enemyAgent.SetDestination(target.position);
+            walking = false;
+            running = true;
         }
         //once chaseval hits 2, call off chasemode (set every stat back to normal)
 
     }
 
+    public void PlaySoundOnce(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+    }
 
 }
