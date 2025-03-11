@@ -59,9 +59,9 @@ public class GameManager : MonoBehaviour
     public static bool isGameOver = false;
 
     //Scene loading for when something happens. Will call on it
-    public static void GameOver()
+    public void GameOver()
     {
-        if (isGameOver) return;
+        if (isGameOver) 
         {
             sceneManager.LoadNextScene("gameOver");
         }
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     public void Credits()
     {
-        if (isCredits) return;
+        if (isCredits) 
         {
             sceneManager.LoadNextScene("credits");
         }
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     public void StartScreen()
     {
-        if (isStartScreen) return;
+        if (isStartScreen) 
         {
             sceneManager.LoadNextScene("mainMenu");
         }

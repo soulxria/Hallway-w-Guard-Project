@@ -6,30 +6,34 @@ using UnityEngine.UI; //For UI stamina bar
 public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
+    public GameManager gameManager; //GameManager reference
 
-    public float walkSpeed = 3.0f; //Walk speed to be slower than monster
-    public float runSpeed = 6.0f; //Run speed to be faster than monster
-    public float stamina = 100f; //Max stamina. Will be changed later to make it easier or harder
-    public float staminaDrain = 10f; //How much the stamina will drain per second while running
-    public float staminaRegen = 5f; //How much stamina regen will be per second
-    public float staminaThreshold = 10f; //How much stamina the player needs in order to run again
-    public float mouseSensitivity = 2f; //How senstive the camera mouse movement will be
-    float cameraVerticalRotation = 0f; //Setting up how the variable will handle movement
-    float cameraHorizontalRotation = 0f; //Setting up for the horizontal movement
+    public float lookSpeedX = 2.0f; //Camera movement for left and right
+    public float lookSpeedY = 2.0f; //Camera movement for up and down
 
-    bool lockedCursor = true;
-
-    public Transform player;
-    public Slider staminaBar;
+    public float walkSpeed = 3.0f; //Walking speed
+    public float runSpeed = 6.0f; //Running speed
+    private bool isRunning = false;
+    private Vector3 moveDirection;
+    private float cameraVerticalRotation = 0f;
 
     private float currentStamina;
-    private bool isRunning = false;
+    public float stamina = 100f; //Max stamina
+    public float staminaDrain = 10f; //How much stamina will drain per second while running
+    public float staminaRegen = 5f; //Stamina regen per second
+    public float staminaThreshold = 10f; //How much stamina is needed in order for player to run again
+    public Slider staminaBar; //Setting up stamina bar UI
+
+    public float interactionRange = 3f; //Distance for player to interact with an object (ex: door)
+    public LayerMask interactableLayer; //Detecting object that can be picked up
+
+    public Transform playerCamera; //Reference to current player camera (Cinemachine Virtual Camera)
+
+    private float rotationX = 0f; //Current vertical rotation of the camera
 
     private Rigidbody rigidbody;
-    private Vector3 MoveDirection;
 
-    private float horizontalInput;
-    private float verticalInput;
+    private HashSet<string> playerKeys = new HashSet<string>(); //Stores the keys that the player is going to pick up
 
     //variables i'm using for stare of death
     public GameObject enemy;
@@ -39,15 +43,13 @@ public class PlayerMovement : MonoBehaviour
     private float sightAngle = 20.0f;
     private bool enemyDetected;
     Enemy enemyS;
+    public bool hasKey;
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
         enemyS = enemy.GetComponent<Enemy>();
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
         HandleStamina();
         UpdateStaminaUI();
         CheckForStaring();
+        CheckForKeyPickup();
     }
 
     private void FixedUpdate()
@@ -65,34 +68,37 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovementInput()
     {
-        //Mouse and key inputs
-        horizontalInput = Input.GetAxis("Horizontal"); //A/D for left and right respectively
-        verticalInput = Input.GetAxis("Vertical"); //W/S for forward and backwards respectively
-        float inputX = Input.GetAxis("Mouse X") * mouseSensitivity; //Looking left and right
-        float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity; //Looking up and down
+        float mouseX = Input.GetAxis("Mouse X") * lookSpeedX;
+        float mouseY = Input.GetAxis("Mouse Y") * lookSpeedY;
 
-        //Rotating the camera around the X axis
-        cameraVerticalRotation -= inputY;
-        cameraHorizontalRotation -= inputX;
-        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, -90f, 90f);
-        cameraHorizontalRotation = Mathf.Clamp(cameraHorizontalRotation, -90f, 90f);
-        transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
-        transform.localEulerAngles = Vector3.up * cameraHorizontalRotation;
+        transform.Rotate(Vector3.up * mouseX);
 
-        //Rotating the player object and the camera around the Y axis
-        player.Rotate(Vector3.up * inputX);
+        cameraVerticalRotation -= mouseY;
+        cameraVerticalRotation = Mathf.Clamp(rotationX, -90f, 90f);
+        playerCamera.localRotation = Quaternion.Euler(cameraVerticalRotation, 0f, 0f);
+
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        Vector3 cameraForward = Camera.main.transform.forward;
+        cameraForward.y = 0f;
+        Vector3 cameraRight = Camera.main.transform.right;
+
+        moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
 
         if (isRunning)
         {
-            MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * runSpeed;
+            moveDirection *= runSpeed;
         }
 
         else
         {
-            MoveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized * walkSpeed;
+            moveDirection *= walkSpeed;
         }
+
+        transform.Translate(moveDirection * Time.deltaTime, Space.World);
     }
 
     void CheckForStaring()
@@ -141,8 +147,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        Vector3 movement = MoveDirection * Time.fixedDeltaTime;
-        rigidbody.MovePosition(transform.position + movement);
+        if (moveDirection.magnitude > 0.1f)
+        {
+            Vector3 movement = moveDirection * Time.fixedDeltaTime;
+            rigidbody.MovePosition(transform.position + movement);
+        }
     }
 
     private void HandleStamina()
@@ -174,7 +183,34 @@ public class PlayerMovement : MonoBehaviour
         {
             Destroy(this.transform.gameObject);
             GameManager.isGameOver = true;
-            GameManager.GameOver();
+        }
+    }
+
+    public bool HasKey(string keyName)
+    {
+        return playerKeys.Contains(keyName); //Checking if player has a certain key
+    }
+
+    public void SetKey(string keyName)
+    {
+        playerKeys.Add(keyName); //Adds key to collection (there are no duplicates)
+        Debug.Log($"You have picked up the {keyName}");
+    }
+
+    private void CheckForKeyPickup()
+    {
+        if (Input.GetKeyDown(KeyCode.E)) //E to pick up key
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, interactionRange, interactableLayer))
+            {
+                if (hit.collider.CompareTag("Key")) //If object has the Key tag
+                {
+                    string keyName = hit.collider.gameObject.name; //Gets the keys name
+                    SetKey(keyName); //Sets the player to have this key
+                    Destroy(hit.collider.gameObject); //Destroys the key once it is picked up
+                }
+            }
         }
     }
 }
