@@ -10,15 +10,29 @@ public class PlayerInteraction : MonoBehaviour
 
     private PlayerMovement playerMovement;
 
+    private Light flashLight;
+    private bool hasFlashLight = false;
+
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>(); //So PlayerMovement and PlayerInteraction are on same GameObject
+        flashlight = GetComponentInChildren<Light>();
+        
+        if (flashlight != null)
+        {
+            flashlight.enabled = false;
+        }
     }
 
     private void Update()
     {
         HandleInteraction();
         InteractWithObject();
+
+        if (Input.GetKeyDown(KeyCode.F) && hasFlashlight)
+        {
+            ToggleFlashlight();
+        }
     }
 
     private void HandleInteraction()
@@ -62,6 +76,22 @@ public class PlayerInteraction : MonoBehaviour
         else
         {
             Debug.Log($"You need the {requiredKey} to unlock this door");
+        }
+    }
+
+    private void PickupFlashLight(Collider collider)
+    {
+        hasFlashlight = true;
+        Destroy(collider.gameObject);
+        Debug.Log("You picked up the flashlight")
+    }
+
+    private void ToggleFlashlight()
+    {
+        if (flashlight != null)
+        {
+            flashlight.enabled = !flashlight.enabled;
+            Debug.Log("Flashlight toggled: " + flashlight.enabled);
         }
     }
 }
