@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
@@ -18,7 +17,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>(); //So PlayerMovement and PlayerInteraction are on same GameObject
         flashlight = GetComponentInChildren<Light>();
-        
+
         if (flashlight != null)
         {
             flashlight.enabled = false;
@@ -28,7 +27,6 @@ public class PlayerInteraction : MonoBehaviour
     private void Update()
     {
         HandleInteraction();
-        //InteractWithObject();
 
         if (Input.GetKeyDown(KeyCode.F) && hasFlashlight)
         {
@@ -53,7 +51,7 @@ public class PlayerInteraction : MonoBehaviour
         if (collider.CompareTag("Key"))
         {
             string keyName = collider.gameObject.name;
-            PlayerMovement.SetKey(keyName);
+            playerMovement.SetKey(keyName);
             Destroy(collider.gameObject);
         }
 
@@ -68,7 +66,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         string requiredKey = doorName + "Key";
 
-        if (PlayerMovement.HasKey(requiredKey))
+        if (playerMovement.HasKey(requiredKey))
         {
             Debug.Log($"Unlocked the {doorName} with the {requiredKey}");
             doorCollider.gameObject.GetComponent<Collider>().enabled = false;
