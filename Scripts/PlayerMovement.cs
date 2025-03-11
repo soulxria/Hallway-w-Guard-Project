@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rigidbody;
 
+    private HashSet<string> playerKeys = new HashSet<string>(); //Stores the keys that the player is going to pick up
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -43,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         HandleMovementInput();
         HandleStamina();
         UpdateStaminaUI();
+        CheckForKeyPickup();
     }
 
     private void FixedUpdate()
@@ -113,6 +116,34 @@ public class PlayerMovement : MonoBehaviour
         if (staminaBar != null)
         {
             staminaBar.value = currentStamina / stamina; //Update the slider UI with percentage of stamina
+        }
+    }
+
+    public bool HasKey(string keyName)
+    {
+        return playerKeys.Contains(keyName); //Checking if player has a certain key
+    }
+
+    public void SetKey(string keyName)
+    {
+        playerKeys.Add(keyName); //Adds key to collection (there are no duplicates)
+        Debug.Log($"You have picked up the {keyName}");
+    }
+
+    private void CheckForKeyPickup()
+    {
+        if (Input.GetKeyDown(KeyCode.E)) //E to pick up key
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, interactionRange, interactableLayer))
+            {
+                if (hit.collider.CompareTag("Key")) //If object has the Key tag
+                {
+                    string keyName = hit.collider.gameObject.name; //Gets the keys name
+                    SetKey(keyName); //Sets the player to have this key
+                    Destroy(hit.collider.gameObject); //Destroys the key once it is picked up
+                }
+            }
         }
     }
 }
