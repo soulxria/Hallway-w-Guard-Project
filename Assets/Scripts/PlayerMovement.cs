@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
     public GameManager gameManager; //GameManager reference
-
     public float lookSpeedX = 2.0f; //Camera movement for left and right
     public float lookSpeedY = 2.0f; //Camera movement for up and down
 
@@ -55,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
         currentStamina = stamina;
         enemyS = enemy.GetComponent<Enemy>();
         audioSource = GetComponent<AudioSource>();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -88,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 cameraForward = Camera.main.transform.forward;
         cameraForward.y = 0f;
         Vector3 cameraRight = Camera.main.transform.right;
-
+        
         moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
