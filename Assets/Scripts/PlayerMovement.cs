@@ -58,6 +58,8 @@ public class PlayerMovement : MonoBehaviour
         currentStamina = stamina;
         enemyS = enemy.GetComponent<Enemy>();
         audioSource = GetComponent<AudioSource>();
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()

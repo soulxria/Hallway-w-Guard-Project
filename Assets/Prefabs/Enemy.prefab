@@ -123,6 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2720b97b8ab16594c841c0d1216e4045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preDeathSprint: 2
   targetMask:
     serializedVersion: 2
     m_Bits: 64
@@ -140,6 +141,11 @@ MonoBehaviour:
   - {fileID: 0}
   target: {fileID: 0}
   player: {fileID: 0}
+  footstepsWalk: {fileID: 0}
+  footstepsRun: {fileID: 0}
+  alertNoise: {fileID: 0}
+  chaseMusic: {fileID: 0}
+  chaseEscape: {fileID: 0}
 --- !u!54 &6995615442517738949
 Rigidbody:
   m_ObjectHideFlags: 0
