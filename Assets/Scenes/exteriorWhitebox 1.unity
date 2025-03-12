@@ -3751,6 +3751,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7343526848650073138, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
+      propertyPath: alertNoise
+      value: 
+      objectReference: {fileID: 8300000, guid: 1bfb965e35f84ca43bd1f6fb490d8727, type: 3}
+    - target: {fileID: 7343526848650073138, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
+      propertyPath: chaseMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 510d79b54a3d4c34eac76ede184562fc, type: 3}
+    - target: {fileID: 7343526848650073138, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
+      propertyPath: chaseEscape
+      value: 
+      objectReference: {fileID: 8300000, guid: 1287653e50907a945beeee65e0e69d71, type: 3}
+    - target: {fileID: 7343526848650073138, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
+      propertyPath: footstepsRun
+      value: 
+      objectReference: {fileID: 8300000, guid: ff4c1f497709ceb4e88cd69428e1de24, type: 3}
+    - target: {fileID: 7343526848650073138, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
+      propertyPath: footstepsWalk
+      value: 
+      objectReference: {fileID: 8300000, guid: 362dbee659ef9324d8f50024019c9cb7, type: 3}
     - target: {fileID: 8381994119443735306, guid: e2d255cc4302ef9448ae0c7fff26731b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.28586
