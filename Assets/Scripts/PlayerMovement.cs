@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; //For UI stamina bar
+using UnityEngine.UIElements; //For UI stamina bar
 
 public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
     public GameManager gameManager; //GameManager reference
+
     public float lookSpeedX = 2.0f; //Camera movement for left and right
     public float lookSpeedY = 2.0f; //Camera movement for up and down
 
@@ -48,14 +49,15 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip footstepsRun;
     public AudioClip keyPickup;
 
+    public string outsideDoorScene = "FinalExterior";
+    public string atticDoorScene = "finalAttic";
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
         enemyS = enemy.GetComponent<Enemy>();
         audioSource = GetComponent<AudioSource>();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -65,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateStaminaUI();
         CheckForStaring();
         CheckForKeyPickup();
+        CheckForDoorInteraction();
     }
 
     private void FixedUpdate()
@@ -89,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 cameraForward = Camera.main.transform.forward;
         cameraForward.y = 0f;
         Vector3 cameraRight = Camera.main.transform.right;
-        
+
         moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > staminaThreshold;
@@ -223,6 +226,42 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void CheckForDoorInteraction()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, interactionRange, interactableLayer))
+            {
+                if (hit.collider.CompareTag("Door"))
+                {
+                    if (hit.collider.name == "outsideDoor" && HasKey("outsideKey"))
+                    {
+                        Debug.Log("Outside door unlocked");
+                        StartCoroutine(LoadSceneAfterDelay(outsideDoorScene));
+                    }
+
+                    else if (hit.collider.name == "atticDoor" && HasKey("atticKey"))
+                    {
+                        Debug.Log("Attic door unlocked");
+                        StartCoroutine(LoadSceneAfterDelay(atticDoorScene));
+                    }
+
+                    else
+                    {
+                        Debug.Log("Door is locked. Looks like you need a key");
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerator LoadSceneAfterDelay(string sceneName)
+    {
+        yield return new WaitForSeconds(1f); //Delay to allow unlocking audio
+        //SceneManager.LoadScene("finalInterior");
     }
 
     public void PlaySoundOnce(AudioClip clip)
