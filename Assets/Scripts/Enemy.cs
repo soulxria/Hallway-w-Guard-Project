@@ -69,6 +69,8 @@ public class Enemy : MonoBehaviour
     {
         //check if player is in cone, if so start timer
         LookForPlayer();
+        //keep track of sound states
+        soundSpeedController();
         //once timer hits zero, set chaseOn true and call chasemode
         if (preChase <= 0)
         {
@@ -92,13 +94,19 @@ public class Enemy : MonoBehaviour
 
     void soundSpeedController()
     {
-        if (walking)
+        float noiseTimer = 0.0f;
+
+        if (walking && noiseTimer <= 0)
         {
             PlaySoundOnce(footstepsWalk);
+            noiseTimer = 2.0f;
+            noiseTimer -= Time.deltaTime;
         }
         else if (running)
         {
             PlaySoundOnce(footstepsRun);
+            noiseTimer = 2.0f;
+            noiseTimer -= Time.deltaTime;
         }
     }
 
