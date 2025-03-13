@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject PlayerMovement;
     public GameObject TutorialEnemy;
     public GameObject Enemy;
+    public SceneManager sceneManager;
     public int currentLevel = 1;
     public bool isVictory = false;
     public bool isCredits = false;
@@ -21,25 +22,25 @@ public class GameManager : MonoBehaviour
     //Scene loading
     public void mainMenu()
     {
-        SceneManager.LoadScene("StartScreen");
+        sceneManager.LoadNextScene("mainMenu");
         Debug.Log("Start Screen has loaded.");
     }
 
     public void Outside()
     {
-        SceneManager.LoadScene("Outside");
+        sceneManager.LoadNextScene("finalExterior");
         Debug.Log("Outside has loaded");
     }
 
     public void Inside()
     {
-        SceneManager.LoadScene("Inside");
+        sceneManager.LoadNextScene("finalInterior");
         Debug.Log("Inside has loaded");
     }
 
     public void Attic()
     {
-        SceneManager.LoadScene("Attic");
+        sceneManager.LoadNextScene("finalAttic");
         Debug.Log("Attic has loaded");
     }
 
@@ -58,11 +59,11 @@ public class GameManager : MonoBehaviour
     public static bool isGameOver = false;
 
     //Scene loading for when something happens. Will call on it
-    public static void GameOver()
+    public void GameOver()
     {
-        if (isGameOver) return;
+        if (isGameOver) 
         {
-            SceneManager.LoadScene("GameOver");
+            sceneManager.LoadNextScene("gameOver");
         }
         //Show game over screen
         Debug.Log("Game Over!");
@@ -70,9 +71,9 @@ public class GameManager : MonoBehaviour
 
     public void Credits()
     {
-        if (isCredits) return;
+        if (isCredits) 
         {
-            SceneManager.LoadScene("Credits");
+            sceneManager.LoadNextScene("credits");
         }
         //Show credits screen
         Debug.Log("Credits Scene");
@@ -80,9 +81,9 @@ public class GameManager : MonoBehaviour
 
     public void StartScreen()
     {
-        if (isStartScreen) return;
+        if (isStartScreen) 
         {
-            SceneManager.LoadScene("StartScreen");
+            sceneManager.LoadNextScene("mainMenu");
         }
         //Show title screen
         Debug.Log("Start Scene");
@@ -92,7 +93,7 @@ public class GameManager : MonoBehaviour
     {
         if (isVictory) return;
         {
-            SceneManager.LoadScene("FinalScene");
+            sceneManager.LoadNextScene("youWin");
         }
         Debug.Log("Final Scene");
 

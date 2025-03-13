@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 635697141787288531}
   - component: {fileID: 4829575288024654117}
   - component: {fileID: 8783907542759487818}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Butt_Cushions_L_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1214588071791245778}
   - component: {fileID: 376606249629342441}
   - component: {fileID: 5323676892954008234}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Butt_Cushions_R_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 3917677152879901607}
   - component: {fileID: 4870584805311268553}
   - component: {fileID: 8462686742700396811}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Back_Cushions_L_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 2172467329993176448}
   - component: {fileID: 8630924159300350109}
   - component: {fileID: 8744362931384582943}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Back_Cushions_R_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 236396372433014074}
   - component: {fileID: 8414045910364782586}
   - component: {fileID: 3939894892623981621}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Arm_Rests_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4312292068884048639}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Couch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -464,7 +464,7 @@ GameObject:
   - component: {fileID: 6078460637237180501}
   - component: {fileID: 6801233441987690931}
   - component: {fileID: 8954720663455413490}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Seat_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 7051029482764985259}
   - component: {fileID: 1587260075053253139}
   - component: {fileID: 6382695204242312698}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Back_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
