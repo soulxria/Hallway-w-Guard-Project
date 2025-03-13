@@ -28,10 +28,10 @@ MonoBehaviour:
       width: 0
       height: 0
     monitorOutterSize:
-      width: 0.1
-      height: 0.1
+      width: 0
+      height: 0
     zoom: 1.19
-    monitorRoundness: 0.2
+    monitorRoundness: 0.1
     monitorTexture: {fileID: 0}
     monitorColor: {r: 0.121796034, g: 0.12775578, b: 0.16037738, a: 1}
     innerMonitorDarkness: 0.215
