@@ -7,6 +7,7 @@ using UnityEngine.Apple;
 
 public class Enemy : MonoBehaviour
 {
+    private Animator animator;
     public float preDeathSprint = 2.0f;
     private bool isCooked;
     private bool chaseOn = false;
@@ -39,11 +40,11 @@ public class Enemy : MonoBehaviour
 
     //enemy sound variables
     AudioSource audioSource;
-    public AudioClip footstepsWalk;
-    public AudioClip footstepsRun;
-    public AudioClip alertNoise;
-    public AudioClip chaseMusic;
-    public AudioClip chaseEscape;
+    public AudioSource footstepsWalk;
+    public AudioSource footstepsRun;
+    public AudioSource alertNoise;
+    public AudioSource chaseMusic;
+    public AudioSource chaseEscape;
     private bool walking;
     private bool running;
 
@@ -53,6 +54,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         rB = GetComponent<Rigidbody>();
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
@@ -94,11 +96,15 @@ public class Enemy : MonoBehaviour
     {
         if (walking)
         {
-            PlaySoundOnce(footstepsWalk);
+            animator.SetBool("isInChase", false);
+            footstepsRun.Stop();
+            footstepsWalk.Play();
         }
         else if (running)
         {
-            PlaySoundOnce(footstepsRun);
+            animator.SetBool("isInChase", true);
+            footstepsWalk.Stop();
+            footstepsRun.Play();
         }
     }
 
@@ -149,9 +155,7 @@ public class Enemy : MonoBehaviour
                         Debug.Log("" + preChase);
                     }
                     Debug.Log("player found");
-                    audioSource.loop = false;
-                    PlaySoundOnce(alertNoise);
-                    audioSource.loop = true;
+                alertNoise.Play();
                 }
                 else
                     playerDetected = false;
@@ -194,7 +198,7 @@ public class Enemy : MonoBehaviour
         //if chase is 0, turn up movespeed, change the cone angle and run at player via nav mesh
         if (chaseVal == 0){
             Debug.Log("Timer hit 0, Chasing");
-            PlaySoundOnce(chaseMusic);
+            chaseMusic.Play();
             enemyAgent.speed = 5.5f;
             chaseOn = true;
             detectionAngle = 50.0f;
@@ -205,9 +209,8 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("Resetting");
             SetPosition();
-            audioSource.loop = false;
-            PlaySoundOnce(chaseEscape);
-            audioSource.loop = true;
+            chaseMusic.Stop();
+            chaseEscape.Play();
             enemyAgent.speed = 2.5f;
             chaseOn = false;
             detectionAngle = 70.0f;
@@ -218,6 +221,7 @@ public class Enemy : MonoBehaviour
         else if (chaseVal == 3)
         {
             Debug.Log("DEATH");
+            animator.SetBool("isInChase", true);
             enemyAgent.speed = 70.5f;
             chaseOn = true;
             isCooked = true;
@@ -229,10 +233,6 @@ public class Enemy : MonoBehaviour
         
     }
 
-    public void PlaySoundOnce(AudioClip clip)
-    {
-        audioSource.PlayOneShot(clip);
-    }
 }
 
 
