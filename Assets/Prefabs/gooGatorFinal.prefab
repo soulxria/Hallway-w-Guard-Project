@@ -1880,6 +1880,7 @@ GameObject:
   - component: {fileID: 7889373756047074536}
   - component: {fileID: 2640246140936734176}
   - component: {fileID: 1513628151044078818}
+  - component: {fileID: 1422024627306543496}
   m_Layer: 8
   m_Name: gooGatorFinal
   m_TagString: Untagged
@@ -1970,6 +1971,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2720b97b8ab16594c841c0d1216e4045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneManager: {fileID: 0}
   preDeathSprint: 2
   targetMask:
     serializedVersion: 2
@@ -1977,11 +1979,9 @@ MonoBehaviour:
   obstructionMask:
     serializedVersion: 2
     m_Bits: 128
-  detectionRadius: 10
+  detectionRadius: 5
   detectionAngle: 80
   patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2045,6 +2045,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &1422024627306543496
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7145341310588905209}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.61
+  m_Height: 2.56
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.14, z: 0.96}
 --- !u!1 &7311030675087731349
 GameObject:
   m_ObjectHideFlags: 0

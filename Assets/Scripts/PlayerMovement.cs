@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public float staminaDrain = 10f; //How much stamina will drain per second while running
     public float staminaRegen = 5f; //Stamina regen per second
     public float staminaThreshold = 10f; //How much stamina is needed in order for player to run again
-    public Slider staminaBar; //Setting up stamina bar UI
+    public UnityEngine.UIElements.Slider staminaBar; //Setting up stamina bar UI
 
     public float interactionRange = 3f; //Distance for player to interact with an object (ex: door)
     public LayerMask interactableLayer; //Detecting object that can be picked up

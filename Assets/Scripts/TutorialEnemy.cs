@@ -1,11 +1,7 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Apple;
 
 public class TutorialEnemy : MonoBehaviour
 {
@@ -58,7 +54,7 @@ public class TutorialEnemy : MonoBehaviour
         rB = GetComponent<Rigidbody>();
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
-        targetPoint = Random.Range(0, 6);
+        targetPoint = Random.Range(0, patrolPoints.Length);
         startingPoint = targetPoint;
         enemyAgent.speed = 1.5f;
         playerS = player.GetComponent<PlayerMovement>();
@@ -122,7 +118,7 @@ public class TutorialEnemy : MonoBehaviour
     }
     int changeTargetInt()
     {
-        int newVal = Random.Range(0, 6);
+        int newVal = Random.Range(1, 6);
         return newVal;
     }
 
@@ -144,23 +140,23 @@ public class TutorialEnemy : MonoBehaviour
 
         Vector3 enemyPosition = transform.position;
 
-        Physics.CheckSphere(transform.position, detectionRadius, targetMask);
+        Physics.CheckSphere(transform.position, 4.0f);
 
         Vector3 directionToTarget = (target.position - transform.position).normalized;
 
-        if (Vector3.Dot(directionToTarget, transform.forward) > Mathf.Cos(detectionAngle * 0.5f * Mathf.Deg2Rad))
+        if (Vector3.Dot(directionToTarget, transform.forward) > Mathf.Cos(70.0f * 0.5f * Mathf.Deg2Rad))
         {
             //Vector3 toPlayer = PlayerMovement.Instance.transform.position - enemyPosition;
             //toPlayer.y = 0;
             float toPlayer = Vector3.Distance(player.transform.position, enemyPosition);
 
-            if (!Physics.Raycast(transform.position, directionToTarget, toPlayer, obstructionMask))
+            if (!Physics.Raycast(transform.position, directionToTarget, toPlayer))
             {
                 playerDetected = true;
                 if (playerDetected == true)
                 {
                     preChase = preChase - Time.deltaTime;
-                    Debug.Log("" + preChase);
+                    Debug.Log("Pre-chase timer:" + preChase);
                 }
                 Debug.Log("player found");
                 audioSource.loop = false;
@@ -214,9 +210,6 @@ public class TutorialEnemy : MonoBehaviour
             PlaySoundOnce(chaseMusic);
             enemyAgent.speed = 5.5f;
             chaseOn = true;
-            detectionAngle = 50.0f;
-            walking = false;
-            running = true;
         }
         else if (chaseVal == 2)
         {
@@ -227,20 +220,6 @@ public class TutorialEnemy : MonoBehaviour
             audioSource.loop = true;
             enemyAgent.speed = 2.5f;
             chaseOn = false;
-            detectionAngle = 70.0f;
-            preChase = 2.0f;
-            running = false;
-            walking = true;
-        }
-        else if (chaseVal == 3)
-        {
-            Debug.Log("DEATH");
-            enemyAgent.speed = 70.5f;
-            chaseOn = true;
-            isCooked = true;
-            enemyAgent.SetDestination(target.position);
-            walking = false;
-            running = true;
         }
         //once chaseval hits 2, call off chasemode (set every stat back to normal)
 

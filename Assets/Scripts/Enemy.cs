@@ -8,6 +8,7 @@ using UnityEngine.Apple;
 public class Enemy : MonoBehaviour
 {
     private Animator animator;
+    public SceneManager sceneManager;
     public float preDeathSprint = 2.0f;
     private bool isCooked;
     private bool chaseOn = false;
@@ -58,12 +59,14 @@ public class Enemy : MonoBehaviour
         rB = GetComponent<Rigidbody>();
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
-        targetPoint = Random.Range(0, 9);
+        targetPoint = Random.Range(0, 7);
         enemyAgent.speed = 2.5f;
         audioSource = GetComponent<AudioSource>();
 
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
-        Debug.Log(patrolPoints[targetPoint].position + "is where I am first going");
+        Debug.Log(targetPoint + " is the point I'm going to");
+        Debug.Log(patrolPoints[targetPoint].position + " is where I am first going");
+        
         audioSource.loop = true;
         walking = true;
     }
@@ -85,7 +88,7 @@ public class Enemy : MonoBehaviour
         else {
             //Movement Patrol (Randomized)
 
-            if (Vector3.Distance(enemyAgent.transform.position, patrolPoints[targetPoint].position) < 1f)
+            if (Vector3.Distance(enemyAgent.transform.position, patrolPoints[targetPoint].position) < 2f)
             {
                 Debug.Log("Target hit, changing");
                 targetPoint = changeTargetInt();
@@ -117,15 +120,18 @@ public class Enemy : MonoBehaviour
     }
     int changeTargetInt()
     {
-        int newVal = Random.Range(0,10);
+        int newVal = Random.Range(0,7);
         return newVal;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.name == "Player")
+        
+        if (other.CompareTag("Player"))
         {
+            Debug.Log("I will kill you!");
             enemyAgent.isStopped = true;
+            sceneManager.LoadNextScene("gameOver");
         }
     }
 

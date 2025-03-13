@@ -12,24 +12,24 @@ EditorBuildSettings:
     path: Assets/Scenes/Gameplay Demo.unity
     guid: 58fd09921986a604d9767bd617f0265e
   - enabled: 1
-    path: Assets/Scenes/finalInterior.unity
-    guid: ce266ad4d451adb409b019b3a84460fb
+    path: Assets/Scenes/mainMenu.unity
+    guid: 534c24042cbf90d48b9d913a07c1345f
   - enabled: 1
     path: Assets/Scenes/credits.unity
     guid: 70008e5ef657ff140aabaed3e4b43991
   - enabled: 1
-    path: Assets/Scenes/finalAttic.unity
-    guid: 267a0dc8a07754d488371ca0015d91ab
+    path: Assets/Scenes/gameOver.unity
+    guid: 03b998f6e6c16624583e048a074c6ad3
+  - enabled: 1
+    path: Assets/Scenes/youWin.unity
+    guid: 09b7af201ad533744be8fdec2283463d
   - enabled: 1
     path: Assets/Scenes/FinalExterior.unity
     guid: d46e5f29b1722014388014744e5ecec8
   - enabled: 1
-    path: Assets/Scenes/gameOver.unity
-    guid: 03b998f6e6c16624583e048a074c6ad3
+    path: Assets/Scenes/finalInterior.unity
+    guid: ce266ad4d451adb409b019b3a84460fb
   - enabled: 1
-    path: Assets/Scenes/mainMenu.unity
-    guid: 534c24042cbf90d48b9d913a07c1345f
-  - enabled: 1
-    path: Assets/Scenes/youWin.unity
-    guid: 09b7af201ad533744be8fdec2283463d
+    path: Assets/Scenes/finalAttic.unity
+    guid: 267a0dc8a07754d488371ca0015d91ab
   m_configObjects: {}
