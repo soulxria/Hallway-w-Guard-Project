@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Flashlight : Interaction 
+public class Flashlight : MonoBehaviour
 {
-    public Light flashlightLight; //Referencing light component added onto flashlight
+    /*public Light flashlightLight; //Referencing light component added onto flashlight
     private bool isHeld = false;
     private bool isOn = false;
 
@@ -33,5 +33,5 @@ public class Flashlight : Interaction
         isOn = !isOn;
         flashlightLight.enabled = isOn;
         Debug.Log(isOn ? "Flashlight turned on" : "Flashlight turned off");
-    }
+    }*/
 }
