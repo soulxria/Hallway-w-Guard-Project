@@ -50,7 +50,7 @@ public class TutorialEnemy : MonoBehaviour
     private bool walking;
     private bool running;
 
-
+    public int startingPoint;
 
 
     void Start()
@@ -59,6 +59,7 @@ public class TutorialEnemy : MonoBehaviour
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
         targetPoint = Random.Range(0, 6);
+        startingPoint = targetPoint;
         enemyAgent.speed = 1.5f;
         playerS = player.GetComponent<PlayerMovement>();
         audioSource = GetComponent<AudioSource>();
