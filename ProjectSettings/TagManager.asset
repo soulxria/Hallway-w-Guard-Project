@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - OutdoorKey
+  - Key
+  - Door
+  - Mcguffin
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - Obstruction
   - Enemy
   - Waypoint
-  - 
+  - NavMeshCourtyard
   - 
   - 
   - 

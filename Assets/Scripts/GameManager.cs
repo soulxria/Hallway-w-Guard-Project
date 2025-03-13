@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject TutorialEnemy;
     public GameObject Enemy;
     public SceneManager sceneManager;
+    public Transform spawnPoint;
     public int currentLevel = 1;
     public bool isVictory = false;
     public bool isCredits = false;
@@ -29,18 +30,21 @@ public class GameManager : MonoBehaviour
     public void Outside()
     {
         sceneManager.LoadNextScene("finalExterior");
+        Instantiate(PlayerMovement, spawnPoint.position, spawnPoint.rotation);
         Debug.Log("Outside has loaded");
     }
 
     public void Inside()
     {
         sceneManager.LoadNextScene("finalInterior");
+        Instantiate(PlayerMovement, spawnPoint.position, spawnPoint.rotation);
         Debug.Log("Inside has loaded");
     }
 
     public void Attic()
     {
         sceneManager.LoadNextScene("finalAttic");
+        Instantiate(PlayerMovement, spawnPoint.position, spawnPoint.rotation);
         Debug.Log("Attic has loaded");
     }
 

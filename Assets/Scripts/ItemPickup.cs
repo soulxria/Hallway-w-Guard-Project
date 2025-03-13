@@ -12,6 +12,7 @@ public class ItemPickup : MonoBehaviour
     public string atticKey = "AtticKey"; //Name for final key
     public GameObject flashlightObject;
     public GameObject mcGuffinObject;
+    public SceneManager sceneManager;
     public GameObject player; //Referencing player
 
     /*public GameObject cutsceneManagerObject;
@@ -21,7 +22,6 @@ public class ItemPickup : MonoBehaviour
     {
         cutsceneManager = cutsceneManagerObject.GetComponent<cutsceneManager>();
     }*/
-
     private void OnTriggerStay(Collider other) //Allowing player to press E to collect item
     {
         if (other.CompareTag("Player") && Input.GetKeyDown(KeyCode.E))
@@ -31,11 +31,14 @@ public class ItemPickup : MonoBehaviour
                 case "OutsideKey":
                     player.GetComponent<PlayerMovement>().SetKey("outsideKey");
                     Debug.Log("Outside Key collected");
+                    Destroy(this.gameObject);
                     break;
 
                 case "AtticKey":
                     player.GetComponent<PlayerMovement>().SetKey("atticKey");
                     Debug.Log("Attic Key collected");
+                    Debug.Log("Destroying item: " + itemName);
+                    Destroy(this.gameObject);
                     break;
 
                 case "Flashlight":
@@ -48,23 +51,20 @@ public class ItemPickup : MonoBehaviour
                 case "McGuffin":
                     player.GetComponent<PlayerMovement>().hasMcGuffin = true;
                     Debug.Log("McGuffin collected");
-                    TriggerEnding();
+                    sceneManager.LoadNextScene("youWin");
+                    
                     break;
 
                 default:
                     Debug.LogWarning("Unknown item type: " + itemName);
                     break;
             }
-
-            Destroy(gameObject);
+            
         }
     }
 
-    private void TriggerEnding()
-    {
-        player.GetComponent<PlayerMovement>().enabled = false;
-        //cutsceneManager.StartCoroutine(cutsceneManager.PlayCutscene());
-    }
+
+    
 }
 
 

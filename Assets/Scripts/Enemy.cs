@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
     //private float detectTimer = 0.0f;
     private float turnTimer;
 
-    private float moveSpeed = 3.5f;
+    //private float moveSpeed = 3.5f;
     //private bool longWays = false;
     private float chaseVal;
     private Rigidbody rB;   
@@ -58,11 +58,12 @@ public class Enemy : MonoBehaviour
         rB = GetComponent<Rigidbody>();
         enemyAgent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
-        targetPoint = Random.Range(0, 6);
+        targetPoint = Random.Range(0, 9);
         enemyAgent.speed = 2.5f;
         audioSource = GetComponent<AudioSource>();
 
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
+        Debug.Log(patrolPoints[targetPoint].position + "is where I am first going");
         audioSource.loop = true;
         walking = true;
     }
@@ -76,6 +77,7 @@ public class Enemy : MonoBehaviour
         {
             ChaseMode(0);
             enemyAgent.SetDestination(target.position);
+            
             if (chaseVal == 2){
                 preChase = 2.0f;
             }
@@ -83,7 +85,7 @@ public class Enemy : MonoBehaviour
         else {
             //Movement Patrol (Randomized)
 
-            if (Vector3.Distance(enemyAgent.transform.position, patrolPoints[targetPoint].position) < 0.5f)
+            if (Vector3.Distance(enemyAgent.transform.position, patrolPoints[targetPoint].position) < 1f)
             {
                 Debug.Log("Target hit, changing");
                 targetPoint = changeTargetInt();
@@ -111,10 +113,11 @@ public class Enemy : MonoBehaviour
     void SetPosition()
     {
         enemyAgent.SetDestination(patrolPoints[targetPoint].position);
+        Debug.Log(patrolPoints[targetPoint].position + "is where I am going");
     }
     int changeTargetInt()
     {
-        int newVal = Random.Range(0,6);
+        int newVal = Random.Range(0,10);
         return newVal;
     }
 
@@ -218,6 +221,7 @@ public class Enemy : MonoBehaviour
             running = false;
             walking = true;
         }
+        /*
         else if (chaseVal == 3)
         {
             Debug.Log("DEATH");
@@ -229,6 +233,7 @@ public class Enemy : MonoBehaviour
             walking = false;
             running = true;
         }
+        */
         //once chaseval hits 2, call off chasemode (set every stat back to normal)
         
     }

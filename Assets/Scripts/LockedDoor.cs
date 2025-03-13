@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class LockedDoor : MonoBehaviour
 {
     public GameObject player;
+    public SceneManager sceneManager;
     public string requiredKey;
     public string outsideDoorScene = "finalInterior";
     public string atticDoorScene = "finalAttic";
@@ -21,12 +22,12 @@ public class LockedDoor : MonoBehaviour
 
                 if (requiredKey == "outsideKey")
                 {
-                    //SceneManager.LoadNextScene(outsideDoorScene);
+                    sceneManager.LoadNextScene("finalInterior");
                 }
 
                 else if (requiredKey == "atticKey")
                 {
-                    //SceneManager.LoadNextScene(atticDoorScene);
+                    sceneManager.LoadNextScene("finalAttic");
                 }
 
                 else

@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
     //variables i'm using for stare of death
     public GameObject enemy;
+    public GameObject tutorialEnemy;
     public LayerMask targetMask; //will look for Enemy layer :3
     public LayerMask obstructionMask;
     private float sightRadius = 10.0f;
@@ -48,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip footstepsWalk;
     public AudioClip footstepsRun;
     public AudioClip keyPickup;
+    public AudioClip enemyLookedAt;
 
     public bool hasFlashlight = false;
     public GameObject flashlight;
@@ -66,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         currentStamina = stamina;
         enemyS = enemy.GetComponent<Enemy>();
+        //enemyT = tutorialEnemy.GetComponent<TutorialEnemy>();
         audioSource = GetComponent<AudioSource>();
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
@@ -112,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if (isRunning)
         {
             moveDirection *= runSpeed;
-            PlaySoundOnce(footstepsRun);
+            //PlaySoundOnce(footstepsRun);
         }
 
         else
@@ -147,6 +150,7 @@ public class PlayerMovement : MonoBehaviour
                 enemyDetected = true;
                 if (enemyDetected == true)
                 {
+                    //PlaySoundOnce(enemyLookedAt);
                     enemyS.preDeathSprint = enemyS.preDeathSprint - Time.deltaTime;
                     if (enemyS.preDeathSprint <= 0)
                     {
@@ -154,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
                     }
                     Debug.Log("" + enemyS.preDeathSprint);
                 }
-                Debug.Log("enemy found");
+                //Debug.Log("enemy found");
 
             }
             else
@@ -173,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 movement = moveDirection * Time.fixedDeltaTime;
             rigidbody.MovePosition(transform.position + movement);
-            PlaySoundOnce(footstepsWalk);
+            
         }
     }
 
@@ -206,6 +210,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Destroy(this.transform.gameObject);
             GameManager.isGameOver = true;
+            Debug.Log("I reached this point");
         }
     }
 
@@ -218,9 +223,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerKeys.Add(keyName); //Adds key to collection (there are no duplicates)
         Debug.Log($"You have picked up the {keyName}");
-        audioSource.loop = false;
-        PlaySoundOnce(keyPickup);
-        audioSource.loop = true;
+        
     }
 
     private void CheckForKeyPickup()
@@ -235,6 +238,8 @@ public class PlayerMovement : MonoBehaviour
                     string keyName = hit.collider.gameObject.name; //Gets the keys name
                     SetKey(keyName); //Sets the player to have this key
                     Destroy(hit.collider.gameObject); //Destroys the key once it is picked up
+                    //Instantiate(tutorialEnemy, enemyT.patrolPoints[startingPoint].position, enemyT.patrolPoints[startingPoint].rotation);
+                    //spawns tutorial enemy at first spawnpoint
                 }
             }
         }
@@ -278,7 +283,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Flashlight()
     {
-        if (hasFlashlight && Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             ToggleFlashlight();
         }

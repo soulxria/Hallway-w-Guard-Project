@@ -4,22 +4,10 @@ using UnityEngine;
 
 public class Flashlight : MonoBehaviour
 {
-    /*public Light flashlightLight; //Referencing light component added onto flashlight
+    public Light flashlightLight; //Referencing light component added onto flashlight
     private bool isHeld = false;
     private bool isOn = false;
 
-    public override void Interact()
-    {
-        //Toggle flashlight on and off
-        if (isHeld)
-        {
-            PickupFlashlight();
-        }
-        else
-        {
-            ToggleFlashlight();
-        }
-    }
 
     private void PickupFlashlight()
     {
@@ -33,5 +21,5 @@ public class Flashlight : MonoBehaviour
         isOn = !isOn;
         flashlightLight.enabled = isOn;
         Debug.Log(isOn ? "Flashlight turned on" : "Flashlight turned off");
-    }*/
+    }
 }
