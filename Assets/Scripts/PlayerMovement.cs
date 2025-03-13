@@ -49,6 +49,15 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip footstepsRun;
     public AudioClip keyPickup;
 
+    public bool hasFlashlight = false;
+    public GameObject flashlight;
+    private bool flashlightOn = false;
+
+    public bool hasMcGuffin = false;
+
+    public bool hasOutsideKey = false;
+    public bool hasAtticKey = false;
+
     public string outsideDoorScene = "FinalExterior";
     public string atticDoorScene = "finalAttic";
 
@@ -70,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
         CheckForStaring();
         CheckForKeyPickup();
         CheckForDoorInteraction();
+        Flashlight();
     }
 
     private void FixedUpdate()
@@ -264,6 +274,21 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1f); //Delay to allow unlocking audio
         //SceneManager.LoadScene("finalInterior");
+    }
+
+    private void Flashlight()
+    {
+        if (hasFlashlight && Input.GetKeyDown(KeyCode.F))
+        {
+            ToggleFlashlight();
+        }
+    }
+
+    private void ToggleFlashlight()
+    {
+        flashlightOn = !flashlightOn;
+        flashlight.SetActive(flashlightOn);
+        Debug.Log("Flashlight " + (flashlightOn ? "On" : "Off"));
     }
 
     public void PlaySoundOnce(AudioClip clip)
